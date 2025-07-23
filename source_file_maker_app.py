@@ -41,7 +41,27 @@ if "df" in st.session_state:
 
 # --- Table Editor ---
 if "df" in st.session_state:
-    edited_df = st.data_editor(st.session_state.df, use_container_width=True, num_rows="dynamic", key="editor")
+    edited_df = st.session_state.df.copy()
+
+    # --- Batch Edit Tools ---
+    with st.expander("⚙️ Bulk Actions", expanded=False):
+        selected_column = st.selectbox("Select Column for Action", edited_df.columns)
+        action = st.selectbox("Action", ["Fill All", "Clear All", "Duplicate First Value"])
+        if st.button("Apply to Column"):
+            if action == "Fill All":
+                fill_value = st.text_input("Enter value to fill")
+                if fill_value:
+                    edited_df[selected_column] = fill_value
+                    st.success(f"All values in '{selected_column}' filled with '{fill_value}'")
+            elif action == "Clear All":
+                edited_df[selected_column] = ""
+                st.success(f"All values in '{selected_column}' cleared.")
+            elif action == "Duplicate First Value":
+                first_val = edited_df[selected_column].iloc[0]
+                edited_df[selected_column] = first_val
+                st.success(f"All values in '{selected_column}' copied from first row.")
+
+    edited_df = st.data_editor(edited_df, use_container_width=True, num_rows="dynamic", key="editor")
 
     # --- Basic Validation (SKU, Price) ---
     def validate(df):
