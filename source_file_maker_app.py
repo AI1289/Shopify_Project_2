@@ -5,15 +5,35 @@ from io import BytesIO
 st.set_page_config(page_title="Source File Maker", layout="wide")
 st.title("🧩 Source File Maker – Shopify Format Generator")
 
-# --- Sidebar Template Configuration ---
+# --- Sidebar Configuration ---
 st.sidebar.header("Configuration")
 def_fields = ["Model", "SKU", "Price", "Weight (lbs)", "Voltage", "Power HP"]
 selected_fields = st.sidebar.multiselect("Select Fields to Include", def_fields, default=def_fields)
-
 row_count = st.sidebar.number_input("Number of Rows", min_value=1, max_value=100, value=10, step=1)
 
 if st.sidebar.button("Generate Blank Table"):
     st.session_state.df = pd.DataFrame(columns=selected_fields, index=range(row_count))
+
+# --- File Import Function ---
+st.sidebar.markdown("---")
+uploaded_file = st.sidebar.file_uploader("Import Existing File", type=["csv", "xlsx"])
+if uploaded_file is not None:
+    try:
+        if uploaded_file.name.endswith(".csv"):
+            st.session_state.df = pd.read_csv(uploaded_file)
+        else:
+            st.session_state.df = pd.read_excel(uploaded_file)
+        st.success("File imported successfully.")
+    except Exception as e:
+        st.error(f"Error loading file: {e}")
+
+# --- Delete Column Function ---
+if "df" in st.session_state:
+    st.sidebar.markdown("---")
+    col_to_delete = st.sidebar.selectbox("Delete Column", st.session_state.df.columns.tolist())
+    if st.sidebar.button("Remove Column"):
+        st.session_state.df.drop(columns=[col_to_delete], inplace=True)
+        st.success(f"Column '{col_to_delete}' removed.")
 
 # --- Table Editor ---
 if "df" in st.session_state:
