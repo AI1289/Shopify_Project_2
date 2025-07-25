@@ -1,7 +1,0 @@
-streamlit
-pandas
-openpyxl
-fuzzywuzzy
-python-Levenshtein
-xlsxwriter
-openai
