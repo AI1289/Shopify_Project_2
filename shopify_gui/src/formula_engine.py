@@ -20,3 +20,17 @@ def safe_eval(expr, variables=None):
     safe_globals = {"__builtins__": None, **allowed_funcs}
     safe_globals.update({k: v for k, v in variables.items() if isinstance(v, (int, float))})
     return eval(compile(node, "<ast>", "eval"), safe_globals, {})
+
+
+import pandas as pd
+
+def apply_formula(df, column_name, expression):
+    results = []
+    for idx, row in df.iterrows():
+        try:
+            result = safe_eval(expression, variables=row.to_dict())
+            results.append(result)
+        except Exception as e:
+            results.append(None)
+    df[column_name] = results
+    return df

@@ -7,6 +7,10 @@ shopify_headers = ["Handle", "Title", "Body (HTML)", "Vendor", "Type", "Tags",
 def map_headers(user_headers):
     mapping = {}
     for col in user_headers:
-        match = get_close_matches(col, shopify_headers, n=1, cutoff=0.6)
-        mapping[col] = match[0] if match else None
+        match = get_close_matches(col.lower(), [h.lower() for h in shopify_headers], n=1, cutoff=0.6)
+        if match:
+            original = next(h for h in shopify_headers if h.lower() == match[0])
+            mapping[col] = original
+        else:
+            mapping[col] = None
     return mapping
