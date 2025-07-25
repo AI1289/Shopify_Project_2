@@ -7,6 +7,23 @@ from src.shopify_csv_handler import export_to_csv
 st.set_page_config(page_title="Shopify Importer", layout="wide")
 st.title("Smart Shopify CSV Importer & Manager")
 
+from src.template_manager import load_template, save_template, list_templates
+
+st.sidebar.subheader("Templates")
+
+template_list = list_templates()
+selected_template = st.sidebar.selectbox("Load Template", ["None"] + template_list)
+if selected_template != "None":
+    template = load_template(selected_template)
+    st.session_state["loaded_template"] = template
+    st.success(f"Loaded template: {selected_template}")
+
+if st.sidebar.button("Save Current as Template"):
+    name = st.sidebar.text_input("Template Name", key="template_name")
+    if name and "original_df" in st.session_state:
+        save_template(name, {}, {})  # Placeholder: pass actual header_mapping & formulas
+        st.success(f"Saved template as: {name}")
+
 uploaded_file = st.file_uploader("Upload a product file (.csv/.xlsx)", type=["csv", "xlsx"])
 if uploaded_file:
     df = pd.read_excel(uploaded_file) if uploaded_file.name.endswith("xlsx") else pd.read_csv(uploaded_file)

@@ -1,0 +1,13 @@
+{
+  "name": "default_template",
+  "header_mapping": {
+    "Name": "Title",
+    "ID": "Handle",
+    "Price": "Variant Price"
+  },
+  "formulas": {
+    "pricing_formula": "round(list_price * 0.36 * 1.15, 2)",
+    "cost_formula": "round(list_price * 0.36, 2)",
+    "grams_formula": "round(weight * 453.592)"
+  }
+}
