@@ -1,7 +1,6 @@
 # Shopify GUI Project – Developer Onboarding Summary
 
 This document serves as a comprehensive and self-contained overview of the Shopify GUI Importer & Manager.  
-It is intended for new contributors or developers to quickly understand the architecture, current status, and ongoing development priorities.
 
 ---
 
